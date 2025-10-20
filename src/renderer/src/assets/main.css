@@ -17,4 +17,11 @@
 
         @apply bg-gray-900/55 backdrop-blur-3xl;
     }
+
+    header{
+        -webkit-app-region: drag;
+    }
+    button{
+        -webkit-app-region: no-drag;
+    }    
 }
