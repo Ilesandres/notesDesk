@@ -3,52 +3,61 @@ import { atom } from "jotai";
 import { notesMock } from "@/store/mocks";
 import { unwrap } from "jotai/utils";
 
-const loadNotes=async ()=>{
-    const notes=await window.context.getNotes()
+const loadNotes = async () => {
+    const notes = await window.context.getNotes()
     //ordenar por edicion mas reciente
-    return notes.sort((a,b)=>b.lastEditTime-a.lastEditTime)
+    return notes.sort((a, b) => b.lastEditTime - a.lastEditTime)
 }
 
 const notesAtomAsync = atom<NoteInfo[] | Promise<NoteInfo[]>>(loadNotes())
 
-export const notesAtom= unwrap(notesAtomAsync,(prev)=>prev)
+export const notesAtom = unwrap(notesAtomAsync, (prev) => prev)
 
-export const selectedNoteIndexAtom= atom<number | null>(null)
+export const selectedNoteIndexAtom = atom<number | null>(null)
 
-export const selectedNotedAtom = atom((get)=>{
-    const notes= get(notesAtom)
+export const selectedNotedAtomAsync = atom(async (get) => {
+    const notes = get(notesAtom)
     const selectedNoteIndex = get(selectedNoteIndexAtom)
-    if(selectedNoteIndex===null || !notes) return null;
+    if (selectedNoteIndex === null || !notes) return null;
 
-    const selectedNote=notes[selectedNoteIndex]
+    const selectedNote = notes[selectedNoteIndex]
+    const noteContent = await window.context.readNote(selectedNote.title)
 
-    return{
+    return {
         ...selectedNote,
-        content: `Hello from Note${selectedNoteIndex}`
+        content: noteContent
     }
 })
 
-export const creatEmptyNoteAtom= atom(null,(get,set)=>{
-    const notes= get(notesAtom)
-    if(!notes) return
-    const title= `Note ${notes.length+1}`
+export const selectedNotedAtom = unwrap(
+    selectedNotedAtomAsync, (prev) =>
+    prev ?? {
+        title: '',
+        content: '',
+        lastEditTime: Date.now()
+    })
 
-    const newNote: NoteInfo={
+export const creatEmptyNoteAtom = atom(null, (get, set) => {
+    const notes = get(notesAtom)
+    if (!notes) return
+    const title = `Note ${notes.length + 1}`
+
+    const newNote: NoteInfo = {
         title,
-        lastEditTime:Date.now(),
+        lastEditTime: Date.now(),
     }
 
-    set(notesAtom,[newNote, ...notes.filter((note)=>note.title !==newNote.title)])
+    set(notesAtom, [newNote, ...notes.filter((note) => note.title !== newNote.title)])
     set(selectedNoteIndexAtom, 0)
 })
-export const deleteNoteAtom= atom(null,(get,set)=>{
-    const notes=get(notesAtom)
+export const deleteNoteAtom = atom(null, (get, set) => {
+    const notes = get(notesAtom)
     const selectedNote = get(selectedNotedAtom)
-    if(!selectedNote || !notes)return
-    
+    if (!selectedNote || !notes) return
+
     set(
         notesAtom,
-        notes.filter((note)=>note.title !==selectedNote.title)
+        notes.filter((note) => note.title !== selectedNote.title)
     )
 
     set(selectedNoteIndexAtom, null)

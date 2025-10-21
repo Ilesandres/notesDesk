@@ -1,7 +1,7 @@
 import { appDirectory, fileEncoding } from "@shared/constanst"
 import { NoteInfo } from "@shared/models"
-import { GetNotes } from "@shared/types"
-import { ensureDir, readdir, stat } from "fs-extra"
+import { GetNotes, Readnote } from "@shared/types"
+import { ensureDir, readdir, readFile, stat } from "fs-extra"
 import { homedir } from "os"
 
 export const getRootDir=()=>{
@@ -28,4 +28,9 @@ export const getNotesInfoFromFileName=async(filename:string):Promise<NoteInfo>=>
         title:filename.replace(/\.md$/, ''),
         lastEditTime: fileStats.mtimeMs
     }
+}
+
+export const readnote:Readnote= async(filename)=>{
+    const rootDir= getRootDir()
+    return readFile(`${rootDir}/${filename}.md`, {encoding:fileEncoding})
 }
