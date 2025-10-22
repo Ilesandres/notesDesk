@@ -67,6 +67,27 @@ app.whenReady().then(() => {
   ipcMain.handle('createNote',(_, ...args:Parameters<CreateNote>)=>createNote(...args))
   ipcMain.handle('deleteNote',(_, ...args:Parameters<DeleteNote>)=>deleteNote(...args))
 
+  // controladores de pestaña de windows
+  ipcMain.handle('window:minimize', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (win) win.minimize()
+  })
+
+  ipcMain.handle('window:toggle-maximize', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (!win) return
+    if (win.isMaximized()) {
+      win.unmaximize()
+    } else {
+      win.maximize()
+    }
+  })
+
+  ipcMain.handle('window:close', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (win) win.close()
+  })
+
   createWindow()
 
   app.on('activate', () => {

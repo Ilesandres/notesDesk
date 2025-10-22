@@ -10,7 +10,10 @@ declare global {
       readNote: Readnote,
       writeNote: WriteNote,
       createNote:  CreateNote,
-      deleteNote: DeleteNote
+      deleteNote: DeleteNote,
+      minimize: () => void,
+      toggleMaximize: () => void,
+      close: () => void
     }
   }
 }

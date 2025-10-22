@@ -12,7 +12,11 @@ try{
     readNote: (...args:Parameters<Readnote>)=>ipcRenderer.invoke('readNote', ...args),
     writeNote: (...args:Parameters<WriteNote>)=>ipcRenderer.invoke('writeNote', ...args),
     createNote: (...args:Parameters<CreateNote>)=>ipcRenderer.invoke('createNote', ...args),
-    deleteNote: (...args:Parameters<DeleteNote>)=>ipcRenderer.invoke('deleteNote', ...args)
+    deleteNote: (...args:Parameters<DeleteNote>)=>ipcRenderer.invoke('deleteNote', ...args),
+   
+    minimize: () => ipcRenderer.invoke('window:minimize'),
+    toggleMaximize: () => ipcRenderer.invoke('window:toggle-maximize'),
+    close: () => ipcRenderer.invoke('window:close')
 
   })
 }catch(error){
