@@ -2,6 +2,8 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { createNote, deleteNote, getNotes, readnote, writeNote } from './lib'
+import { CreateNote, DeleteNote, GetNotes, Readnote, WriteNote } from '@shared/types'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -58,6 +60,33 @@ app.whenReady().then(() => {
   })
 
   ipcMain.on('ping', () => console.log('pong'))
+  
+  ipcMain.handle('getNotes',(_,...args:Parameters<GetNotes>)=>getNotes(...args))
+  ipcMain.handle('readNote',(_, ...args:Parameters<Readnote>)=>readnote(...args))
+  ipcMain.handle('writeNote',(_, ...args:Parameters<WriteNote>)=>writeNote(...args))
+  ipcMain.handle('createNote',(_, ...args:Parameters<CreateNote>)=>createNote(...args))
+  ipcMain.handle('deleteNote',(_, ...args:Parameters<DeleteNote>)=>deleteNote(...args))
+
+  // controladores de pestaña de windows
+  ipcMain.handle('window:minimize', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (win) win.minimize()
+  })
+
+  ipcMain.handle('window:toggle-maximize', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (!win) return
+    if (win.isMaximized()) {
+      win.unmaximize()
+    } else {
+      win.maximize()
+    }
+  })
+
+  ipcMain.handle('window:close', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (win) win.close()
+  })
 
   createWindow()
 
