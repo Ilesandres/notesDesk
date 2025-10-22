@@ -1,3 +1,3 @@
-export const appDirectory='Documents/Notemark'
+export const appDirectory=`Documents/Notemark`
 export const fileEncoding = 'utf8'
 export const autoSavingTime=3000

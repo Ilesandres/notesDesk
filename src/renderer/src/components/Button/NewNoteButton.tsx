@@ -8,8 +8,8 @@ import { creatEmptyNoteAtom } from "@/store";
 export const NewNoteButton = ({ ...props }: ActionButtonProps) => {
     const createEmptynote=useSetAtom(creatEmptyNoteAtom)
 
-    const handleCreation=()=>{
-        createEmptynote()
+    const handleCreation= async()=>{
+        await createEmptynote()
     }
 
     return (
