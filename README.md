@@ -6,6 +6,9 @@ Aplicación de escritorio para tomar notas en Markdown, construida con Electron 
 
 ![Imagen general](https://github.com/user-attachments/assets/cb9fb666-5005-4d7c-b9da-7f31510ac0eb)
 
+## Descargas
+[Descargar notesDesk para Windows (.exe)](https://github.com/Ilesandres/notesDesk/releases/latest/download/note-app-desk.exe)
+
 ## Directorio de notas
 
 Las notas se guardan como archivos `.md` dentro del directorio de usuario, en:
